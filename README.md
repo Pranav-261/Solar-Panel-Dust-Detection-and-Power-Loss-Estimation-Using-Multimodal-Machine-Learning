@@ -1,47 +1,55 @@
-# Solar Panel Power Loss Estimation
+# Solar Panel Power Loss Estimation & Soiling Detection
 
 ## Description
-This project aims to estimate power loss in solar panels due to soiling (dirt, dust, etc.) using image analysis and environmental data. It develops a regression model to predict power loss percentage based on panel images and irradiance levels.
+This project focuses on predicting energy efficiency loss in photovoltaic (PV) panels due to soiling (dust, dirt, and debris). Unlike traditional image-only systems, this pipeline implements a **multimodal machine learning approach** that fuses high-dimensional visual features with environmental data (solar irradiance). 
 
-## Dataset: DeepSolarEye
-The **DeepSolarEye** dataset is a specialized collection designed for solar panel soiling detection and power loss prediction. It addresses the maintenance challenges of solar plants, where accumulated dirt or debris reduces efficiency.
+This integration effectively addresses the "lighting-driven appearance change" problem, allowing the model to distinguish between genuine soiling and simple changes in ambient light, which is critical for real-world UAV or edge-monitored solar farm maintenance.
 
-### Key Dataset Details
-- **Content:** Over 45,000 RGB images (~45,754) capturing various soiling conditions on PV panels.
-- **Soiling Types:** Simulated natural conditions including dust, gray powder, red and brown sand, and varying thick patches of dirt (ranging from clean to 90% power loss).
-- **Environmental Factors:** Includes irradiance levels and timestamps for each image.
-- **Data Resolution:** RGB images often at $150 \times 150$ or $192 \times 192$ resolution.
-- **Labels:** Includes power loss labels, enabling weakly supervised training without complex pixel-level segmentation maps.
-- **Purpose:** Power loss prediction, soiling detection, and localization via CNNs.
-- **License:** Creative Commons.
-- **Associated Paper:** *"DeepSolarEye: Power Loss Prediction and Weakly Supervised Soiling Localization via Fully Convolutional Networks for Solar Panels"* (2018).
-
+## Key Results
+- **Predictive Accuracy ($R^2$):** **0.8126** (High correlation between predicted and actual power loss).
+- **Mean Absolute Error (MAE):** **6.40** (Percentage points), indicating high precision in estimating energy degradation.
+- **Explainability (XAI):** Integrated **SHAP** to identify that the fusion of mid-range irradiance and specific texture-based visual embeddings are the primary drivers for accurate loss estimation.
 
 ## Technologies Used
-- **Programming Language:** Python
-- **Data Analysis:** Pandas, NumPy, H5py
-- **Visualization:** Matplotlib, Seaborn
-- **Image Processing:** OpenCV, Scikit-image, Pillow, Albumentations
-- **Machine Learning/Deep Learning:** TensorFlow, Keras, Scikit-learn (Random Forest, HistGradientBoostingRegressor, PCA, StandardScaler, SimpleImputer)
-- **Model Explainability:** SHAP
-- **Utilities:** Joblib
+* **Programming & Core:** Python (Pandas, NumPy, H5py)
+* **Deep Learning & Vision:** TensorFlow, Keras, OpenCV, Scikit-image, Albumentations
+* **Machine Learning:** Scikit-learn (HistGradientBoosting, Random Forest, PCA, StandardScaler)
+* **Interpretability & Utilities:** SHAP, Joblib
+* **Visualization:** Matplotlib, Seaborn
+
+## Dataset: DeepSolarEye
+The project utilizes the **DeepSolarEye** dataset, a specialized collection for PV maintenance research.
+- **Size:** ~45,754 RGB images capturing diverse soiling conditions.
+- **Conditions:** Simulated natural dust (red sand, brown sand, gray powder) and varying patches of dirt.
+- **Labels:** Continuous power-loss labels (ranging from 0% to 90%) and matched irradiance/timestamps.
+- **Resolution:** Images processed at $150 \times 150$ or $192 \times 192$ pixels.
+- **Significance:** Enables weakly supervised training for power loss prediction without requiring expensive pixel-level segmentation.
+
+## Project Architecture
+1.  **Feature Extraction:** Generates 1280-dimensional visual embeddings using a deep CNN backbone.
+2.  **Dimensionality Reduction:** Applies **PCA** to reduce visual features to 32 principal components, retaining maximum variance while reducing noise.
+3.  **Multimodal Fusion:** Concatenates reduced visual embeddings with engineered image features and numerical solar irradiance data.
+4.  **Regression Pipeline:** Trains an ensemble of **HistGradientBoosting** and **Random Forest** regressors to output the final power loss percentage.
+
+## Getting Started
 
 ## Project Structure
 - `results/`: Folder for saving output data and visualizations.
 - `model/`: Folder for saving trained model files.
 - `Final_Deep_Solar_Eye_Predicting_Energy_Loss_in_Solar_Panels_Using_ML_Based_Dust_Detection.ipynb`: Main project notebook.
-
-## Getting Started
-
-### Prerequisites
-Make sure you have Python installed. It is recommended to use a virtual environment.
-
+- 
 ### Installation
-Install the required dependencies using pip:
-
+Clone the repository and install the required dependencies:
 ```bash
+git clone [https://github.com/YourUsername/solar-panel-power-loss.git](https://github.com/YourUsername/solar-panel-power-loss.git)
+cd solar-panel-power-loss
 pip install -r requirements.txt
 ```
 
+
+
 ## Usage
 Open the Jupyter notebook `Final_Deep_Solar_Eye_Predicting_Energy_Loss_in_Solar_Panels_Using_ML_Based_Dust_Detection.ipynb` and run the cells to reproduce the analysis and model training.
+
+## Citation
+S. Mehta, A. P. Azad, S. A. Chemmengath, V. Raykar and S. Kalyanaraman, "DeepSolarEye: Power Loss Prediction and Weakly Supervised Soiling Localization via Fully Convolutional Networks for Solar Panels," 2018 IEEE Winter Conference on Applications of Computer Vision (WACV).
