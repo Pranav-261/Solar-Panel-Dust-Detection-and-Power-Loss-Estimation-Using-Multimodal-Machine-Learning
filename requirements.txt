@@ -1,0 +1,13 @@
+numpy
+pandas
+matplotlib
+seaborn
+opencv-python-headless
+scikit-image
+h5py
+tensorflow
+scikit-learn
+joblib
+shap
+albumentations
+Pillow
